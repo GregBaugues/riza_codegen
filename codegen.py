@@ -11,17 +11,23 @@ def get_prompt(filename, **kwargs):
     return prompt.format(**kwargs)
 
 
+def get_requirements(filename):
+    path = "requirements/" + filename + ".txt"
+    with open(path, "r") as f:
+        return f.read().strip()
+
+
 def call_openai(messages):
     client = OpenAI()
     response = client.chat.completions.create(model="o3-mini", messages=messages)
     return response.choices[0].message.content.strip()
 
 
-def write_code(instructions):
+def write_code(requirements):
     msgs = [
         {
             "role": "developer",
-            "content": get_prompt("write_code", instructions=instructions),
+            "content": get_prompt("write_code", requirements=requirements),
         },
     ]
     code = call_openai(msgs)
@@ -29,7 +35,7 @@ def write_code(instructions):
     return True
 
 
-def revise_code(instructions, feedback=None, error=None):
+def revise_code(requirements, feedback=None, error=None):
     """
     Revise the existing code based on review feedback or an error message.
     One of review_feedback or error_message should be provided.
@@ -39,8 +45,7 @@ def revise_code(instructions, feedback=None, error=None):
         print("No existing code found to revise.")
         return False
 
-    # Use the appropriate prompt template with instructions
-    prompt = get_prompt("write_code", instructions=instructions)
+    prompt = get_prompt("write_code", requirements=requirements)
 
     if feedback:
         prompt += get_prompt(
@@ -113,12 +118,11 @@ def run_code(input_filename=None):
         print(message)
         helpers.write_execution_output(message)
         return "", message
-    print(result.stdout)
     helpers.write_execution_output(result.stdout)
     return result.stdout, None
 
 
-def write_review_and_run_code(instructions, input_filename=None):
+def write_review_and_run_code(requirements, input_filename=None):
     """
     Execute the entire code generation, review, revision, and execution process.
     Uses provided instructions.
@@ -126,15 +130,15 @@ def write_review_and_run_code(instructions, input_filename=None):
     helpers.clear_files_directory()
     max_attempts = 10
 
-    print("Instructions:")
-    print(instructions)
+    print("Requirements:")
+    print(requirements)
 
     for attempt in range(1, max_attempts + 1):
         print(f"\nAttempt {attempt}:")
 
         if attempt == 1:
             print("Generating code...")
-            write_code(instructions)
+            write_code(requirements)
         else:
             print("Using revised code...")
 
@@ -145,7 +149,7 @@ def write_review_and_run_code(instructions, input_filename=None):
 
         if feedback != "👍":
             print("Review feedback received. Revising code based on review feedback...")
-            revise_code(instructions, feedback=feedback)
+            revise_code(requirements, feedback=feedback)
             continue
 
         print("Executing code...")
@@ -154,7 +158,7 @@ def write_review_and_run_code(instructions, input_filename=None):
             print(
                 "Runtime error encountered. Revising code based on runtime error feedback..."
             )
-            revise_code(instructions, error=runtime_error)
+            revise_code(requirements, error=runtime_error)
             continue
 
         if output:
@@ -166,9 +170,9 @@ def write_review_and_run_code(instructions, input_filename=None):
 
 
 if __name__ == "__main__":
-    # Clear all files in the 'files' directory at start of run using helper function.
-    instructions = get_prompt("iss")
-    write_review_and_run_code(instructions)
+    requirements = get_requirements("iss")
+    write_review_and_run_code(requirements)
+
 
 __all__ = [
     "call_openai",
@@ -178,4 +182,5 @@ __all__ = [
     "run_code",
     "write_review_and_run_code",
     "get_prompt",
+    "get_requirements",
 ]

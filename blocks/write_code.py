@@ -1,5 +1,21 @@
 from openai import OpenAI
 
+prompt = """
+You are an expert Python developer. 
+Follow best practices and generate code accordingly. 
+Only return working python. 
+You are an expert programmer. 
+When given a programming task, you will only output the final code, without any explanation. 
+Do NOT put quotes or backticks around the code. 
+Do NOT provide any commentary before or after the valid code. 
+
+Your task is to generate code based on these instructions: 
+
+<requirements>
+{requirements}
+</requirements>
+"""
+
 
 def call_openai(messages):
     client = OpenAI()
@@ -7,17 +23,19 @@ def call_openai(messages):
     return response.choices[0].message.content.strip()
 
 
-# Generates (or modifies) code based on instructions and review feedback using model "o3-mini".
-def generate_code(instructions):
+def write_code(requirements):
     msgs = [
-        {"role": "system", "content": "You are a helpful assistant that writes code."},
-        {"role": "user", "content": instructions},
+        {
+            "role": "developer",
+            "content": prompt.format(requirements=requirements),
+        },
     ]
+
     code = call_openai(msgs)
     return code
 
 
 if __name__ == "__main__":
-    instructions = "Write a function that prints 'Hello, world!'"
-    code = generate_code(instructions)
+    requirements = "Write a hello world program in python"
+    code = write_code(requirements)
     print(code)

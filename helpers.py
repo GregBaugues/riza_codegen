@@ -50,13 +50,12 @@ def read_latest_file(directory, pattern):
         return ""
 
 
-def write_code(content):
+def write_timestamped_file(directory, prefix, extension, content):
     """
-    Write the provided code content to a timestamped file in the 'files' directory
-    with prefix 'code_for_riza' and extension 'py'.
+    Write the provided content to a timestamped file in the specified directory,
+    using the given prefix and file extension.
     """
-    ensure_directory("files")
-    file_path = timestamped_path("files", "code_for_riza", "py")
+    file_path = timestamped_path(directory, prefix, extension)
     write_file(file_path, content)
 
 
@@ -68,20 +67,19 @@ def read_code():
     return read_latest_file("files", "code_for_riza*.py")
 
 
-def write_execution_output(message):
-    """
-    Write the provided message to a timestamped file in the 'files' directory.
-    """
-    file_path = timestamped_path("files", "output", "txt")
-    write_file(file_path, message)
+def write_code(content):
+    """Write the provided code to a timestamped file in the 'files' directory with prefix 'code_for_riza' and .py extension."""
+    write_timestamped_file("files", "code_for_riza", "py", content)
 
 
 def write_review_comments(review):
-    """
-    Write the provided review comments to a timestamped file in the 'files' directory.
-    """
-    file_path = timestamped_path("files", "code_review_comments", "txt")
-    write_file(file_path, review)
+    """Write the provided review comments to a timestamped file in the 'files' directory with prefix 'review_for_riza' and .txt extension."""
+    write_timestamped_file("files", "review_for_riza", "txt", review)
+
+
+def write_execution_output(output):
+    """Write the provided execution output to a timestamped file in the 'files' directory with prefix 'execution_output' and .txt extension."""
+    write_timestamped_file("files", "execution_output", "txt", output)
 
 
 def clear_files_directory():

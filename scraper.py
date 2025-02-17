@@ -29,9 +29,9 @@ def download_html_body(website_url):
 if __name__ == "__main__":
     URL = "https://www2.brea.ca.gov/breasearch/faces/party/search.xhtml"
     html = download_html_body(URL)
-    instructions = """
+    requirements = """
 in the file are a few HTML tables. 
 we care about the second table in the file. 
 convert the data in that table to json.
 """
-    codegen.write_review_and_run_code(instructions, input_filename="html.html")
+    codegen.write_review_and_run_code(requirements, input_filename="html.html")

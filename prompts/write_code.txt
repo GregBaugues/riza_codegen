@@ -25,8 +25,8 @@ def load_file():
     return stdin
 ```
 
-Your task is to generate code based on these instructions: 
+Generate code to meet these requirements: 
 
-<instructions>
-{instructions}
-</instructions>
+<requirements>
+{requirements}
+</requirements>
