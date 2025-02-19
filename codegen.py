@@ -164,13 +164,14 @@ def write_review_and_run_code(requirements, input_filename=None):
         if output:
             print("Output:")
             print(output)
+            helpers.write_execution_output(output)
         break
     else:
         print("Max attempts reached without successful code generation")
 
 
 if __name__ == "__main__":
-    requirements = get_requirements("iss")
+    requirements = get_requirements("fib")
     write_review_and_run_code(requirements)
 
 

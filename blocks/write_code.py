@@ -36,6 +36,6 @@ def write_code(requirements):
 
 
 if __name__ == "__main__":
-    requirements = "Write a hello world program in python"
+    requirements = "What is 52! (52 factorial)?"
     code = write_code(requirements)
     print(code)
