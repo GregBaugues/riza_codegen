@@ -31,5 +31,5 @@ def run_code(code):
 
 
 if __name__ == "__main__":
-    code = "print('Hello World!')"
+    code = "print(10 * 9 * 8 * 7 * 6 * 5 * 4 * 3 * 2 * 1"
     run_code(code)
